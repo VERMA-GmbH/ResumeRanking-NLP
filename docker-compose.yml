@@ -1,6 +1,12 @@
-version: '3'
+
+## Create a docker compose file to run python
 services:
-  myapp:
+  app:
     build: .
+    container_name: resume-ranking
+    command: uvicorn main:app --host 0.0.0.0 --port 80 --reload
     ports:
-      - "80:80"
+      - "8080:80"
+    volumes:
+      - .:/usr/src/app
+

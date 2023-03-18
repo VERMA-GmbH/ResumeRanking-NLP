@@ -2,17 +2,17 @@
 FROM python:3.8.1
 
 # Set the working directory to /app
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Copy the current directory contents into the container at /app
-COPY . /app
+COPY . .
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
 RUN pip install scikit-learn==1.2.2 pandas==1.2.5
 
 # Make port 80 available to the world outside this container
-EXPOSE 80
-
-# Run app.py when the container launches
-CMD ["python", "main.py"]
+#EXPOSE 80
+#
+## Run app.py when the container launches
+#CMD ["python", "main.py"]
