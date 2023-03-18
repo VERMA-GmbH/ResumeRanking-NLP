@@ -25,10 +25,11 @@ def get_model(Resumes):
 
     lda_model = LdaModel(corpus=corpus,
                                 id2word=id2word,
-                                num_topics=4,
+                                num_topics=7,
                                 random_state=100,
                                 chunksize=chunksize,
                                 passes=passes,
+                                update_every=3, # determines how often the model parameters should be updated
                                 alpha='auto',
                                 eta ='auto',
                                 iterations = iterations,

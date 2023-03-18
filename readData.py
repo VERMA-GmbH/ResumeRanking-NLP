@@ -1,14 +1,28 @@
 # from operator import index
 # from pandas._config.config import options
-# import Cleaner
-import Cleaner as Cleaner
+import os
 import textract as tx
 import pandas as pd
-import os
+# import Cleaner
+import Cleaner as Cleaner
 # import tf_idf
 import tf_idf as tf_idf
+import Distill as Distill
+from pdf2docx import Converter
 
-columns = ["Name", "Context", "Cleaned", "Selective", "Selective_Reduced", "TF_Based"]
+columns = ["Name", "Context", "Cleaned", "Selective", "Selective_Reduced", "TF_Based","Skills_extracted"]
+
+
+def check_file_docx(file_name):
+    if file_name.endswith(".docx") or file_name.endswith(".doc"):
+        return True
+    return False
+
+def convert_pdf_to_docx(file_path):
+    docx_file_path = os.path.splitext(file_path)[0]+'.docx'
+    cv = Converter(file_path)
+    cv.convert(docx_file_path)      # all pages by default
+    cv.close()
 
 def get_cleaned_words(document):
     for i in range(len(document)):
@@ -18,14 +32,22 @@ def get_cleaned_words(document):
         document[i].append(" ".join(raw[2]))
         sentence = tf_idf.do_tfidf(document[i][3].split(" "))
         document[i].append(sentence)
+        skills = Distill.extract_skills(document[i][1])
+        document[i].append(' '.join(skills))
     return document
 
 def read_resumes(resume_dir = "/Data/Resumes/"):
     document = []
 
     for resume in os.listdir(resume_dir):
-        filepath = os.path.join(resume_dir, resume)
         temp = []
+        docx_file = os.path.splitext(resume)[0]+'.docx'
+        if not resume.endswith(".docx"):
+            if resume.endswith(".pdf") and not os.path.exists(os.path.join(resume_dir,resume)):
+                convert_pdf_to_docx(os.path.join(resume_dir, resume))
+            else:
+                continue
+        filepath = os.path.join(resume_dir, docx_file)
         temp.append(filepath)
         text = tx.process(filepath, encoding='ascii')
         text = str(text, 'utf-8')
@@ -43,8 +65,14 @@ def read_resumes(resume_dir = "/Data/Resumes/"):
 def read_jd(job_desc_dir = "/Data/JobDesc/"):
     jd = []
     for job_desc in os.listdir(job_desc_dir):
-        filepath = os.path.join(job_desc_dir, job_desc)
         temp = []
+        docx_file = os.path.splitext(job_desc)[0]+'.docx'
+        if not job_desc.endswith(".docx"):
+            if job_desc.endswith(".pdf") and not os.path.exists(os.path.join(job_desc_dir,job_desc)):
+                convert_pdf_to_docx(os.path.join(job_desc_dir, job_desc))
+            else:
+                continue
+        filepath = os.path.join(job_desc_dir, docx_file)
         temp.append(filepath)
         text = tx.process(filepath, encoding='ascii')
         text = str(text, 'utf-8')

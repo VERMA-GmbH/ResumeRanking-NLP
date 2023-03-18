@@ -44,7 +44,9 @@ def get_resumes():
 def get_similarity(index:int):
     jobs = readData.read_jd(job_desc_dir="Data/JobDesc/")
     resumes = readData.read_resumes(resume_dir="Data/Resumes/")
-    resumes['scores'] = Similar.calculate_scores(resumes, jobs,index)
+    resumes['scores_tf_idf'] = Similar.calculate_scores(resumes, jobs, index)
+    resumes['scores_skills_extracted'] = Similar.calculate_scores_using_skills(resumes, jobs, index)
+    resumes['Scores'] = (resumes['Scores_tf_idf'] + resumes['Scores_skills_extracted'])/2
     ranked_resumes = resumes.sort_values(
         by=['scores'], ascending=False).reset_index(drop=True)
     ranked_resumes['rank'] = pd.DataFrame([i for i in range(1, len(ranked_resumes['scores'])+1)])

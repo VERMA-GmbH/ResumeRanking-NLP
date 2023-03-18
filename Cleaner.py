@@ -3,16 +3,17 @@ import spacy
 import Distill as Distill
 
 try:
-    nlp = spacy.load('en_core_web_sm')
+    nlp = spacy.load('en_core_web_lg')
 
 except ImportError:
-    print("Spacy's English Language Modules aren't present \n Install them by doing \n python -m spacy download en_core_web_sm")
+    print("Spacy's English Language Modules aren't present \n Install them by doing \n python -m spacy download en_core_web_lg")
 
 
 def _base_clean(text):
     """
     Takes in text read by the parser file and then does the text cleaning.
     """
+    text = Distill.remove_punctuations(text)
     text = Distill.tokenize(text)
     text = Distill.remove_stopwords(text)
     text = Distill.remove_tags(text)
