@@ -46,7 +46,7 @@ def get_similarity(index:int):
     resumes = readData.read_resumes(resume_dir="Data/Resumes/")
     resumes['scores_tf_idf'] = Similar.calculate_scores(resumes, jobs, index)
     resumes['scores_skills_extracted'] = Similar.calculate_scores_using_skills(resumes, jobs, index)
-    resumes['Scores'] = (resumes['Scores_tf_idf'] + resumes['Scores_skills_extracted'])/2
+    resumes['scores'] = (resumes['scores_tf_idf'] + resumes['scores_skills_extracted'])/2
     ranked_resumes = resumes.sort_values(
         by=['scores'], ascending=False).reset_index(drop=True)
     ranked_resumes['rank'] = pd.DataFrame([i for i in range(1, len(ranked_resumes['scores'])+1)])
@@ -70,7 +70,7 @@ def get_lda_topics():
 
 
 
-
+print(get_similarity(0))
 
 
 # print("Loading Resume data and running Resume Ranking System")
