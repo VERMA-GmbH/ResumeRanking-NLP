@@ -70,6 +70,7 @@ def get_lda_topics():
 
 
 
+print(get_similarity(0))
 
 
 # print("Loading Resume data and running Resume Ranking System")
