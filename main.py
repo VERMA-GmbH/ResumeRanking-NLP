@@ -34,10 +34,10 @@ async def create_upload_files(type:Type, files: List[UploadFile] = File(...)):
     for file in files:
         contents = await file.read()
         if type == "JobDesc":
-            with open("Data/JobDesc/file.filename", "wb") as f:
+            with open(f"Data/JobDesc/{file.filename}", "wb") as f:
                 f.write(contents)
         else:
-            with open("Data/Resumes/file.filename", "wb") as f:
+            with open(f"Data/Resumes/{file.filename}", "wb") as f:
                 f.write(contents)
     return {"file_names": [file.filename for file in files]}
 
