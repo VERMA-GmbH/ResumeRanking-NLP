@@ -6,6 +6,7 @@ from typing import Union
 from typing import List
 from fastapi import FastAPI, File, UploadFile
 from enum import Enum
+from fastapi.middleware.cors import CORSMiddleware
 
 
 import Similar
@@ -13,6 +14,16 @@ import readData
 import lda
 
 app = FastAPI()
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 class Type(str, Enum):
     JobDesc = "JobDesc"
