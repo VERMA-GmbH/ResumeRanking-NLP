@@ -32,8 +32,8 @@ class Type(str, Enum):
     JobDesc = "JobDesc"
     Resume = "Resume"
 
-class client_ID(BaseModel):
-    client_id : str
+# class client_ID(BaseModel):
+#     client_id : str
 
 
 # @app.post("/uploadfiles/")
@@ -66,7 +66,7 @@ async def create_upload_files( files: List[UploadFile] = File(...)):
         }
 
 @app.post("/uploadfiles/resumes")
-async def create_upload_files( client_id : client_ID, files: List[UploadFile] = File(...)):
+async def create_upload_files( client_id : str, files: List[UploadFile] = File(...)):
     save_folder_path = os.path.join("Data", "Resume", client_id.client_id)
     if not os.path.exists(save_folder_path):
         os.mkdir(save_folder_path)
