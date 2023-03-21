@@ -7,6 +7,9 @@ from typing import List
 from fastapi import FastAPI, File, UploadFile
 from enum import Enum
 from fastapi.middleware.cors import CORSMiddleware
+import uuid
+import os
+from pydantic import BaseModel
 
 
 import Similar
@@ -29,17 +32,57 @@ class Type(str, Enum):
     JobDesc = "JobDesc"
     Resume = "Resume"
 
-@app.post("/uploadfiles/")
-async def create_upload_files(type:Type, files: List[UploadFile] = File(...)):
+class client_ID(BaseModel):
+    client_id : str
+
+
+# @app.post("/uploadfiles/")
+# async def create_upload_files(type:Type, files: List[UploadFile] = File(...)):
+#     for file in files:
+#         contents = await file.read()
+#         if type == "JobDesc":
+#             with open(f"Data/JobDesc/{file.filename}", "wb") as f:
+#                 f.write(contents)
+#         else:
+#             with open(f"Data/Resumes/{file.filename}", "wb") as f:
+#                 f.write(contents)
+#     return {"file_names": [file.filename for file in files]}
+
+@app.post("/uploadfiles/jobbdesc")
+async def create_upload_files( files: List[UploadFile] = File(...)):
+    client_id = uuid.uuid4()
+    # Check/ create client ID folder
+    save_folder_path = os.path.join("Data", "JobDesc", client_id)
+    if not os.path.exists(save_folder_path):
+        os.mkdir(save_folder_path)
     for file in files:
         contents = await file.read()
-        if type == "JobDesc":
-            with open(f"Data/JobDesc/{file.filename}", "wb") as f:
-                f.write(contents)
-        else:
-            with open(f"Data/Resumes/{file.filename}", "wb") as f:
-                f.write(contents)
-    return {"file_names": [file.filename for file in files]}
+        save_path_file =  os.path.join(save_folder_path, file.filename)
+        with open(save_file_path, "wb") as f:
+            f.write(contents)
+    return {
+        "file_names": [file.filename for file in files],
+        "client_id" : client_id
+        }
+
+@app.post("/uploadfiles/resumes")
+async def create_upload_files( client_id : client_ID, files: List[UploadFile] = File(...)):
+    # Check/ create client ID folder
+    save_folder_path = os.path.join("Data", "JobDesc", client_id)
+    if not os.path.exists(save_folder_path):
+        os.mkdir(save_folder_path)
+    for file in files:
+        contents = await file.read()
+        save_path_file =  os.path.join(save_folder_path, file.filename)
+        with open(save_file_path, "wb") as f:
+            f.write(contents)
+    return {
+        "file_names": [file.filename for file in files],
+        "client_id" : client_id
+        }
+    
+
+
 
 @app.get("/jobdescs")
 def get_job_descriptions():
