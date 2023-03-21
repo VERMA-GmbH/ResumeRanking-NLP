@@ -50,7 +50,7 @@ class client_ID(BaseModel):
 
 @app.post("/uploadfiles/jobbdesc")
 async def create_upload_files( files: List[UploadFile] = File(...)):
-    client_id = uuid.uuid4()
+    client_id = str(uuid.uuid4())
     # Check/ create client ID folder
     save_folder_path = os.path.join("Data", "JobDesc", client_id)
     if not os.path.exists(save_folder_path):
