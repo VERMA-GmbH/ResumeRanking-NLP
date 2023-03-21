@@ -4,7 +4,7 @@ from operator import index
 import pandas as pd
 from typing import Union
 from typing import List
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from enum import Enum
 from fastapi.middleware.cors import CORSMiddleware
 import uuid
@@ -83,6 +83,17 @@ async def create_upload_files( client_id : str, files: List[UploadFile] = File(.
 
 
 
+@app.post("/mapping_job_index")
+async def create_upload_files( client_id : str):
+    save_folder_path = os.path.join("Data", "JobDesc", client_id)
+    if not os.path.exists(save_folder_path):
+        raise HTTPException(status_code=404, detail=f"client_id:{client_id} not found")
+    mapping = {}
+    for i, file in enumerate(os.listdir(save_folder_path)):
+        mapping[file]  = i 
+    return mapping
+
+
 @app.get("/jobdescs")
 def get_job_descriptions():
     jobs = readData.read_jd(job_desc_dir="Data/JobDesc/")
@@ -94,9 +105,11 @@ def get_resumes():
     return {'resumes':resumes}
 
 @app.post("/similarity-rankings")
-def get_similarity(index:int):
-    jobs = readData.read_jd(job_desc_dir="Data/JobDesc/")
-    resumes = readData.read_resumes(resume_dir="Data/Resumes/")
+def get_similarity(client_id : str, index:int):
+    jobs_path = os.path.join("Data", "JobDesc", client_id)
+    resume_path = os.path.join("Data", "Resumes", client_id)
+    jobs = readData.read_jd(job_desc_dir=jobs_path, index = int(index))
+    resumes = readData.read_resumes(resume_dir=resume_path)
     resumes['scores_tf_idf'] = Similar.calculate_scores(resumes, jobs, index)
     resumes['scores_skills_extracted'] = Similar.calculate_scores_using_skills(resumes, jobs, index)
     resumes['scores'] = (resumes['scores_tf_idf'] + resumes['scores_skills_extracted'])/2
