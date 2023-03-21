@@ -58,7 +58,7 @@ async def create_upload_files( files: List[UploadFile] = File(...)):
     for file in files:
         contents = await file.read()
         save_path_file =  os.path.join(save_folder_path, file.filename)
-        with open(save_file_path, "wb") as f:
+        with open(save_path_file, "wb") as f:
             f.write(contents)
     return {
         "file_names": [file.filename for file in files],
