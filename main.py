@@ -11,7 +11,7 @@ import uuid
 import os
 from pydantic import BaseModel
 import json
-
+from utils import *
 
 import Similar
 import readData
@@ -61,6 +61,7 @@ async def create_upload_files( files: List[UploadFile] = File(...)):
         save_path_file =  os.path.join(save_folder_path, file.filename)
         with open(save_path_file, "wb") as f:
             f.write(contents)
+        check_and_convert_pdf_file(save_path_file)
     return {
         "file_names": [file.filename for file in files],
         "client_id" : client_id
@@ -76,6 +77,7 @@ async def create_upload_files( client_id : str, files: List[UploadFile] = File(.
         save_path_file =  os.path.join(save_folder_path, file.filename)
         with open(save_path_file, "wb") as f:
             f.write(contents)
+        check_and_convert_pdf_file(save_path_file)
     return {
         "file_names": [file.filename for file in files],
         "client_id" : client_id
