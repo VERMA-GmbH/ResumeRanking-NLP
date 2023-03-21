@@ -67,7 +67,7 @@ async def create_upload_files( files: List[UploadFile] = File(...)):
 
 @app.post("/uploadfiles/resumes")
 async def create_upload_files( client_id : str, files: List[UploadFile] = File(...)):
-    save_folder_path = os.path.join("Data", "Resume", client_id)
+    save_folder_path = os.path.join("Data", "Resumes", client_id)
     if not os.path.exists(save_folder_path):
         os.mkdir(save_folder_path)
     for file in files:
