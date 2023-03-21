@@ -110,7 +110,8 @@ def get_similarity(client_id : str, index:int):
     resume_path = os.path.join("Data", "Resumes", client_id)
     jobs = readData.read_jd(job_desc_dir=jobs_path, index = int(index))
     resumes = readData.read_resumes(resume_dir=resume_path)
-    resumes['scores_tf_idf'] = Similar.calculate_scores(resumes, jobs, index=0)
+    index = 0 # From above index we have already filtered jobdesc
+    resumes['scores_tf_idf'] = Similar.calculate_scores(resumes, jobs, index)
     resumes['scores_skills_extracted'] = Similar.calculate_scores_using_skills(resumes, jobs, index)
     resumes['scores'] = (resumes['scores_tf_idf'] + resumes['scores_skills_extracted'])/2
     ranked_resumes = resumes.sort_values(
