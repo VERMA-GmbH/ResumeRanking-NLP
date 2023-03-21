@@ -52,6 +52,7 @@ class Type(str, Enum):
 @app.post("/uploadfiles/jobbdesc")
 async def create_upload_files( files: List[UploadFile] = File(...)):
     client_id = str(uuid.uuid4())
+    uploaded_files = []
     # Check/ create client ID folder
     save_folder_path = os.path.join("Data", "JobDesc", client_id)
     if not os.path.exists(save_folder_path):
@@ -61,9 +62,11 @@ async def create_upload_files( files: List[UploadFile] = File(...)):
         save_path_file =  os.path.join(save_folder_path, file.filename)
         with open(save_path_file, "wb") as f:
             f.write(contents)
-        check_and_convert_pdf_file(save_path_file)
+        uploaded_files.append(
+            check_and_convert_pdf_file(save_path_file)
+        )
     return {
-        "file_names": [file.filename for file in files],
+        "file_names": uploaded_files,
         "client_id" : client_id
         }
 
@@ -72,14 +75,17 @@ async def create_upload_files( client_id : str, files: List[UploadFile] = File(.
     save_folder_path = os.path.join("Data", "Resumes", client_id)
     if not os.path.exists(save_folder_path):
         os.mkdir(save_folder_path)
+    uploaded_files = []
     for file in files:
         contents = await file.read()
         save_path_file =  os.path.join(save_folder_path, file.filename)
         with open(save_path_file, "wb") as f:
             f.write(contents)
-        check_and_convert_pdf_file(save_path_file)
+        uploaded_files.append(
+            check_and_convert_pdf_file(save_path_file)
+        )
     return {
-        "file_names": [file.filename for file in files],
+        "file_names": uploaded_files,
         "client_id" : client_id
         }
     

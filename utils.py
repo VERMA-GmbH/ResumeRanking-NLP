@@ -48,3 +48,4 @@ def check_and_convert_pdf_file(pdf_path, inplace = True):
         convert_pdf_to_docx(pdf_path, file_name)
         if inplace:
             os.remove(pdf_path)
+    return file_name
