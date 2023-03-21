@@ -62,9 +62,12 @@ def read_resumes(resume_dir = "/Data/Resumes/"):
 # document = read_resumes()
 
 
-def read_jd(job_desc_dir = "/Data/JobDesc/"):
+def read_jd(job_desc_dir = "/Data/JobDesc/", index:int = None):
+    jd_search = os.listdir(job_desc_dir)
+    if index is not None:
+        jd_search = [os.listdir(job_desc_dir)[index]]
     jd = []
-    for job_desc in os.listdir(job_desc_dir):
+    for job_desc in jd_search:
         temp = []
         docx_file = os.path.splitext(job_desc)[0]+'.docx'
         if not job_desc.endswith(".docx"):
