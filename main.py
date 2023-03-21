@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uuid
 import os
 from pydantic import BaseModel
+import json
 
 
 import Similar
@@ -118,7 +119,8 @@ def get_similarity(client_id : str, index:int):
         by=['scores'], ascending=False).reset_index(drop=True)
     ranked_resumes['rank'] = pd.DataFrame([i for i in range(1, len(ranked_resumes['scores'])+1)])
     ranked_resumes = ranked_resumes[['Name','scores','rank']]
-    return ranked_resumes.to_json(orient='records')
+    resp = ranked_resumes.to_json(orient='records')
+    return json.loads(resp)
 
 @app.post("/lda-rankings")
 def get_lda_topics():
