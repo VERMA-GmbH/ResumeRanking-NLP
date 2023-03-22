@@ -1,0 +1,15 @@
+[Unit]
+Description=Resume Ranking Service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+WorkingDirectory=/root/ResumeRanking-NLP
+ExecStart=/root/resume_parser/bin/uvicorn main:app --port 8000 --host 0.0.0.0 --reload
+
+
+[Install]
+WantedBy=multi-user.target
