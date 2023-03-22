@@ -126,7 +126,7 @@ def get_similarity(client_id : str, index:int):
     index = 0 # From above index we have already filtered jobdesc
     resumes['scores_tf_idf'] = Similar.calculate_scores(resumes, jobs, index)
     resumes['scores_skills_extracted'] = Similar.calculate_scores_using_skills(resumes, jobs, index)
-    resumes['scores'] = (resumes['scores_tf_idf'] + resumes['scores_skills_extracted'])/2
+    resumes['scores'] = (0.4*resumes['scores_tf_idf'] + 0.6*resumes['scores_skills_extracted'])
     ranked_resumes = resumes.sort_values(
         by=['scores'], ascending=False).reset_index(drop=True)
     ranked_resumes['rank'] = pd.DataFrame([i for i in range(1, len(ranked_resumes['scores'])+1)])
@@ -144,9 +144,7 @@ def get_lda_topics():
                            columns=['Document No', 'Dominant Topic', 'Topic % Contribution', 'Keywords'])
     df_some['Names'] = resumes['Name']
     df_some = df_some.sort_values(by=['Topic % Contribution'], ascending=False)
-    print(df_some)
     return df_some.to_json(orient='records')
-
 
 
 
