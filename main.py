@@ -18,6 +18,8 @@ import readData
 import lda
 
 app = FastAPI()
+
+
 origins = ["*"]
 
 app.add_middleware(
@@ -27,6 +29,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 class Type(str, Enum):
