@@ -53,13 +53,16 @@ def read_resumes(resume_dir = "/Data/Resumes/"):
             text = tx.process(filepath, encoding='ascii')
             text = str(text, 'utf-8')
             temp.append(text)
-            document.append(temp)
+
+
+            temp = get_cleaned_words([temp])
+            document.append(temp[0])
 
         except Exception as e:
             documents_failed.append(resume)
 
 
-    document = get_cleaned_words(document)
+    # document = get_cleaned_words(document)
     document = pd.DataFrame(document, columns = columns)
     return document, documents_failed
 
