@@ -49,8 +49,8 @@ def read_resumes(resume_dir = "/Data/Resumes/"):
                 continue
         filepath = os.path.join(resume_dir, docx_file)
         temp.append(filepath)
-        text = tx.process(filepath, encoding='ascii')
-        text = str(text, 'utf-8')
+        text = tx.process(filepath, encoding='utf-8')
+        text = str(text)
         temp.append(text)
         document.append(temp)
 
@@ -77,8 +77,8 @@ def read_jd(job_desc_dir = "/Data/JobDesc/", index:int = None):
                 continue
         filepath = os.path.join(job_desc_dir, docx_file)
         temp.append(filepath)
-        text = tx.process(filepath, encoding='ascii')
-        text = str(text, 'utf-8')
+        text = tx.process(filepath, encoding='utf-8')
+        text = str(text)
         temp.append(text)
         jd.append(temp)
     jd = get_cleaned_words(jd)
