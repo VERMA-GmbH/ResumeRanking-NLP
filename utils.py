@@ -53,7 +53,7 @@ def check_and_convert_pdf_file(pdf_path, inplace = True):
         return file_name
     except Exception as e: 
         os.remove(pdf_path)
-        print(f"Error in converting PDF {pdf_path} to docx")
+        print(f"Error in converting PDF {pdf_path} to docx\n", e)
         return False
     
 
