@@ -55,7 +55,7 @@ def check_and_convert_pdf_file(pdf_path, inplace = True):
 
 def delete_dir(dir_path = None, delete_before = 24*60*60):
     # Specify the directory path
-    if dir_full_path == None:
+    if dir_path == None:
         return
     # Get the current time in seconds
     now = time.time()
