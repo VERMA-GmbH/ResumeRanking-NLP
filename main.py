@@ -98,6 +98,7 @@ async def create_upload_files( files: List[UploadFile] = File(...)):
             )
         except Exception as e:
             logger.critical("save file path: " + save_path_file + " Filename: " + str(file.filename))
+    del_old_data()
     return {
         "file_names": uploaded_files,
         "client_id" : client_id
