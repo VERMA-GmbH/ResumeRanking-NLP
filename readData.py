@@ -49,7 +49,7 @@ def read_resumes(resume_dir = "/Data/Resumes/"):
                 continue
         filepath = os.path.join(resume_dir, docx_file)
         temp.append(filepath)
-        text = tx.process(filepath, encoding='utf-8')
+        text = tx.process(filepath)
         text = str(text)
         temp.append(text)
         document.append(temp)
