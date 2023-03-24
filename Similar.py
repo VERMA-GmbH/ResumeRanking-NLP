@@ -24,9 +24,14 @@ def match(resume, job_des):
 def calculate_scores(resumes, job_description, index):
     scores = []
     for x in range(resumes.shape[0]):
-        score = match(
-            resumes['TF_Based'][x], job_description['TF_Based'][index])
-        scores.append(score)
+        try:
+            score = match(
+                resumes['TF_Based'][x], job_description['TF_Based'][index])
+            scores.append(score)
+        except Exception as e:
+            print(e, "Appending score 0")
+            scores.append(0)
+        
     return scores
 
 def calculate_scores_using_skills(resumes, job_description, index):
