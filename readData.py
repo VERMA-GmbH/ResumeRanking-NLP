@@ -38,25 +38,30 @@ def get_cleaned_words(document):
 
 def read_resumes(resume_dir = "/Data/Resumes/"):
     document = []
-
+    documents_failed = []
     for resume in os.listdir(resume_dir):
         temp = []
-        docx_file = os.path.splitext(resume)[0]+'.docx'
-        if not resume.endswith(".docx"):
-            if resume.endswith(".pdf") and not os.path.exists(os.path.join(resume_dir,resume)):
-                convert_pdf_to_docx(os.path.join(resume_dir, resume))
-            else:
-                continue
-        filepath = os.path.join(resume_dir, docx_file)
-        temp.append(filepath)
-        text = tx.process(filepath, encoding='ascii')
-        text = str(text, 'utf-8')
-        temp.append(text)
-        document.append(temp)
+        try:
+            docx_file = os.path.splitext(resume)[0]+'.docx'
+            if not resume.endswith(".docx"):
+                if resume.endswith(".pdf") and not os.path.exists(os.path.join(resume_dir,resume)):
+                    convert_pdf_to_docx(os.path.join(resume_dir, resume))
+                else:
+                    continue
+            filepath = os.path.join(resume_dir, docx_file)
+            temp.append(filepath)
+            text = tx.process(filepath, encoding='ascii')
+            text = str(text, 'utf-8')
+            temp.append(text)
+            document.append(temp)
+
+        except Exception as e:
+            documents_failed.append(resume)
+
 
     document = get_cleaned_words(document)
     document = pd.DataFrame(document, columns = columns)
-    return document
+    return document, documents_failed
 
 
 # document = read_resumes()

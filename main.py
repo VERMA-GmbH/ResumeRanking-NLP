@@ -174,10 +174,14 @@ def get_resumes():
 
 @app.post("/similarity-rankings")
 def get_similarity(client_id : str, index:int):
-    jobs_path = os.path.join("Data", "JobDesc", client_id)
-    resume_path = os.path.join("Data", "Resumes", client_id)
-    jobs = readData.read_jd(job_desc_dir=jobs_path, index = int(index))
-    resumes = readData.read_resumes(resume_dir=resume_path)
+    try:
+        jobs_path = os.path.join("Data", "JobDesc", client_id)
+        resume_path = os.path.join("Data", "Resumes", client_id)
+        jobs = readData.read_jd(job_desc_dir=jobs_path, index = int(index))
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Error in loading Jobdescc\n" + str(e))
+    resumes, resumes_failed = readData.read_resumes(resume_dir=resume_path)
+
     index = 0 # From above index we have already filtered jobdesc
     resumes['scores_tf_idf'] = Similar.calculate_scores(resumes, jobs, index)
     resumes['scores_skills_extracted'] = Similar.calculate_scores_using_skills(resumes, jobs, index)
@@ -187,7 +191,9 @@ def get_similarity(client_id : str, index:int):
     ranked_resumes['rank'] = pd.DataFrame([i for i in range(1, len(ranked_resumes['scores'])+1)])
     ranked_resumes = ranked_resumes[['Name','scores','rank']]
     resp = ranked_resumes.to_json(orient='records')
-    return json.loads(resp)
+    return_data = json.loads(resp)
+    return_data["Unprocessed resumes"]= resumes_failed
+    return return_data
 
 @app.post("/lda-rankings")
 def get_lda_topics():
