@@ -192,7 +192,9 @@ def get_similarity(client_id : str, index:int):
     ranked_resumes = ranked_resumes[['Name','scores','rank']]
     resp = ranked_resumes.to_json(orient='records')
     return_data = json.loads(resp)
-    return_data["Unprocessed resumes"]= resumes_failed
+    return_data.append({
+        "Unprocessed resumes": resumes_failed
+        })
     return return_data
 
 @app.post("/lda-rankings")
