@@ -49,3 +49,4 @@ def check_and_convert_pdf_file(pdf_path, inplace = True):
         if inplace:
             os.remove(pdf_path)
     return file_name
+

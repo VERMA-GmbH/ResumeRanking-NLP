@@ -87,14 +87,17 @@ async def create_upload_files( files: List[UploadFile] = File(...)):
     for file in files:
         contents = await file.read()
         save_path_file =  os.path.join(save_folder_path, file.filename)
-        with open(save_path_file, "wb") as f:
-            f.write(contents)
-            logger.info("Uploaded "+ save_path_file)
-        uploaded_files.append(
-            os.path.basename(
-                check_and_convert_pdf_file(save_path_file)
+        try:
+            with open(save_path_file, "wb") as f:
+                f.write(contents)
+                logger.info("Uploaded "+save_path_file)
+            uploaded_files.append(
+                os.path.basename(
+                    check_and_convert_pdf_file(save_path_file)
+                )
             )
-        )
+        except Exception as e:
+            logger.critical("save file path: " + save_path_file + " Filename: " + str(file.filename))
     return {
         "file_names": uploaded_files,
         "client_id" : client_id
@@ -109,14 +112,17 @@ async def create_upload_files( client_id : str, files: List[UploadFile] = File(.
     for file in files:
         contents = await file.read()
         save_path_file =  os.path.join(save_folder_path, file.filename)
-        with open(save_path_file, "wb") as f:
-            f.write(contents)
-            logger.info("Uploaded "+save_path_file)
-        uploaded_files.append(
-            os.path.basename(
-                check_and_convert_pdf_file(save_path_file)
+        try:
+            with open(save_path_file, "wb") as f:
+                f.write(contents)
+                logger.info("Uploaded "+save_path_file)
+            uploaded_files.append(
+                os.path.basename(
+                    check_and_convert_pdf_file(save_path_file)
+                )
             )
-        )
+        except Exception as e:
+            logger.critical("save file path: " + save_path_file + " Filename: " + str(file.filename))
     return {
         "file_names": uploaded_files,
         "client_id" : client_id
