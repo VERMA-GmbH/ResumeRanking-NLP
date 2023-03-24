@@ -44,11 +44,15 @@ def check_pdf_file(pdf_path):
 
 
 def check_and_convert_pdf_file(pdf_path, inplace = True):
-    check_result, file_name = check_pdf_file(pdf_path)
-    if check_result:
-        convert_pdf_to_docx(pdf_path, file_name)
-        if inplace:
-            os.remove(pdf_path)
+    try:
+        check_result, file_name = check_pdf_file(pdf_path)
+        if check_result:
+            convert_pdf_to_docx(pdf_path, file_name)
+            if inplace:
+                os.remove(pdf_path)
+    except Exception as e: 
+        os.remove(pdf_path)
+        print(f"Error in converting PDF {pdf_path} to docx")
     return file_name
 
 
