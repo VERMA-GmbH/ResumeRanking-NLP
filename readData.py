@@ -77,7 +77,7 @@ def read_jd(job_desc_dir = "/Data/JobDesc/", index:int = None):
                 continue
         filepath = os.path.join(job_desc_dir, docx_file)
         temp.append(filepath)
-        text = tx.process(filepath, encoding='utf-8')
+        text = tx.process(filepath)
         text = str(text)
         temp.append(text)
         jd.append(temp)
