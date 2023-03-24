@@ -89,7 +89,7 @@ async def create_upload_files( files: List[UploadFile] = File(...)):
         save_path_file =  os.path.join(save_folder_path, file.filename)
         with open(save_path_file, "wb") as f:
             f.write(contents)
-            logger.info("Uploaded ", save_path_file)
+            logger.info("Uploaded "+ save_path_file)
         uploaded_files.append(
             os.path.basename(
                 check_and_convert_pdf_file(save_path_file)
@@ -111,7 +111,7 @@ async def create_upload_files( client_id : str, files: List[UploadFile] = File(.
         save_path_file =  os.path.join(save_folder_path, file.filename)
         with open(save_path_file, "wb") as f:
             f.write(contents)
-            logger.info("Uploaded ", save_path_file)
+            logger.info("Uploaded "+save_path_file)
         uploaded_files.append(
             os.path.basename(
                 check_and_convert_pdf_file(save_path_file)
