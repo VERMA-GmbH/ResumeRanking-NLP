@@ -17,6 +17,30 @@ import Similar
 import readData
 import lda
 
+
+import logging
+from logging.handlers import RotatingFileHandler
+import time
+
+# Logger
+
+log_formatter = logging.Formatter('%(asctime)s %(levelname)s %(name)s %(funcName)s(%(lineno)d) %(message)s')
+logFile = __name__ + '.log'
+
+rotating_handler = RotatingFileHandler(logFile, mode='a', maxBytes=5*1024*1024, 
+                                backupCount=1, encoding=None, delay=0)
+rotating_handler.setFormatter(log_formatter)
+
+rotating_handler.setLevel(logging.INFO)
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+logger.addHandler(rotating_handler)
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(log_formatter)
+logger.addHandler(stream_handler)
+
+
 app = FastAPI()
 
 
@@ -65,6 +89,7 @@ async def create_upload_files( files: List[UploadFile] = File(...)):
         save_path_file =  os.path.join(save_folder_path, file.filename)
         with open(save_path_file, "wb") as f:
             f.write(contents)
+            logger.info("Uploaded ", save_path_file)
         uploaded_files.append(
             os.path.basename(
                 check_and_convert_pdf_file(save_path_file)
@@ -86,6 +111,7 @@ async def create_upload_files( client_id : str, files: List[UploadFile] = File(.
         save_path_file =  os.path.join(save_folder_path, file.filename)
         with open(save_path_file, "wb") as f:
             f.write(contents)
+            logger.info("Uploaded ", save_path_file)
         uploaded_files.append(
             os.path.basename(
                 check_and_convert_pdf_file(save_path_file)
