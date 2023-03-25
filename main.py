@@ -8,6 +8,7 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from enum import Enum
 from fastapi.middleware.cors import CORSMiddleware
 import uuid
+import pandas as pd
 import os
 from pydantic import BaseModel
 import json
@@ -184,7 +185,7 @@ def get_similarity(client_id : str, index:int):
 
     index = 0 # From above index we have already filtered jobdesc
     resumes['scores_tf_idf'] = Similar.calculate_scores(resumes, jobs, index)
-    resumes['scores_skills_extracted'] = Similar.calculate_scores_using_skills(resumes, jobs, index)
+    resumes['scores_skills_extracted'] = pd.Series(Similar.calculate_scores_using_skills(resumes, jobs, index))
     resumes['scores'] = (0.4*resumes['scores_tf_idf'] + 0.6*resumes['scores_skills_extracted'])
     ranked_resumes = resumes.sort_values(
         by=['scores'], ascending=False).reset_index(drop=True)
