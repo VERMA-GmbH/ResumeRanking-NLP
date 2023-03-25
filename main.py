@@ -193,6 +193,11 @@ def get_similarity(client_id : str, index:int):
     ranked_resumes = ranked_resumes[['Name','scores','rank']]
     resp = ranked_resumes.to_json(orient='records')
     return_data = json.loads(resp)
+    for data in return_data:
+        try:
+            data["Name"] = os.path.basename(data["Name"])
+        except:
+            pass
     return_data.append({
         "Unprocessed resumes": resumes_failed
         })
