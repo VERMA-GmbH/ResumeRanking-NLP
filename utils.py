@@ -121,7 +121,6 @@ def extract_mobile_numbers(text):
     mobile_numbers = []
     for match in match_iter:
         mobile_numbers.append(match.group())
-    mobile_numbers = list(set(mobile_numbers))
     # Return the mobile numbers as a list
     return mobile_numbers
 
@@ -143,7 +142,8 @@ def extract_email_addresses(text):
         if not current_address.endswith(".com"):
             continue 
         if i == 0:
-            email_addresses.append(current_address)
+            if current_address not in email_addresses:
+                email_addresses.append(current_address)
         else:
             previous_match = matches[i-1]
             previous_address = previous_match.group()
@@ -151,23 +151,23 @@ def extract_email_addresses(text):
                 if len(current_address) < len(previous_address):
                     email_addresses[-1] = current_address
             else:
-                email_addresses.append(current_address)
-    email_addresses = list(set(email_addresses))
+                if current_address not in email_addresses:
+                    email_addresses.append(current_address)
     # Return the email addresses as a list
     return email_addresses
 
 def get_similarity_post_processing(data):
-    data["email"] = []
-    data["contacts"] = []
+    data["contacts"], data["email"] = "N/A"
     
     try:
         text=read_docx_file(data["Name"])
         emails =extract_email_addresses(text)
-        data["email"].extend(emails)
+        if len(emails) > 0 :
+            data["email"] = emails[0]
 
         mobile_numbers = extract_mobile_numbers(text)
-
-        data["contacts"].extend(mobile_numbers)
+        if len(mobile_numbers) > 0 :
+            data["contacts"] =  extend(mobile_numbers)
     except Exception as e:
         print(e, "\nError processing Email/Mobile Number")
     data["Name"] = os.path.basename(data["Name"])
