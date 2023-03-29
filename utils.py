@@ -140,6 +140,8 @@ def extract_email_addresses(text):
     email_addresses = []
     for i, match in enumerate(matches):
         current_address = match.group()
+        if not current_address.endswith(".com"):
+            continue 
         if i == 0:
             email_addresses.append(current_address)
         else:
