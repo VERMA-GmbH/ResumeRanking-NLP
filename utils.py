@@ -8,7 +8,6 @@ import docx
 from docx import Document
 from PyPDF2 import PdfReader
 
-email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
 
 
@@ -122,9 +121,38 @@ def extract_mobile_numbers(text):
     mobile_numbers = []
     for match in match_iter:
         mobile_numbers.append(match.group())
-
+    mobile_numbers = list(set(mobile_numbers))
     # Return the mobile numbers as a list
     return mobile_numbers
+
+
+def extract_email_addresses(text):
+    """
+    Extracts email addresses from a string and returns them as a list.
+    """
+    # Define the regular expression pattern
+    pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+
+    # Search for the pattern in the text
+    matches = list(re.finditer(pattern, text))
+
+    # Select the email address with the shorter length in case of overlapping matches
+    email_addresses = []
+    for i, match in enumerate(matches):
+        current_address = match.group()
+        if i == 0:
+            email_addresses.append(current_address)
+        else:
+            previous_match = matches[i-1]
+            previous_address = previous_match.group()
+            if match.start() < previous_match.end():
+                if len(current_address) < len(previous_address):
+                    email_addresses[-1] = current_address
+            else:
+                email_addresses.append(current_address)
+    email_addresses = list(set(email_addresses))
+    # Return the email addresses as a list
+    return email_addresses
 
 def get_similarity_post_processing(data):
     data["email"] = []
@@ -132,7 +160,7 @@ def get_similarity_post_processing(data):
     
     try:
         text=read_docx_file(data["Name"])
-        emails = re.findall(email_pattern, text)
+        emails =extract_email_addresses(text)
         data["email"].extend(emails)
 
         mobile_numbers = extract_mobile_numbers(text)
