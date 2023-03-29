@@ -132,7 +132,7 @@ def get_similarity_post_processing(data):
     
     try:
         text=read_docx_file(data["Name"])
-        emails = re.findall(email_pattern, string)
+        emails = re.findall(email_pattern, text)
         data["email"].extend(emails)
 
         mobile_numbers = extract_mobile_numbers(text)

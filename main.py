@@ -196,6 +196,7 @@ def get_similarity(client_id : str, index:int):
     for data in return_data:
         try:
             get_similarity_post_processing(data) 
+            data["scores"] = "{:.2%}".format(data["scores"])
         except:
             pass
     return_data.append({
