@@ -197,8 +197,8 @@ def get_similarity(client_id : str, index:int):
         try:
             get_similarity_post_processing(data) 
             data["scores"] = "{:.2f}%".format(data["scores"])
-        except:
-            pass
+        except Exception as e:
+            print(e)
     return_data.append({
         "Unprocessed resumes": resumes_failed
         })

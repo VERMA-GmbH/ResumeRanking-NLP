@@ -140,9 +140,7 @@ def extract_email_addresses(text):
     for i, match in enumerate(matches):
         try:
             current_address = match.group()
-            if not current_address.endswith(".com"):
-                continue 
-            if i == 0:
+            if i == 0  :
                 if current_address not in email_addresses:
                     email_addresses.append(current_address)
             else:
@@ -156,12 +154,16 @@ def extract_email_addresses(text):
                         email_addresses.append(current_address)
         except Exception as e:
             print(e)
+    filtered_email = []
+    for email in email_addresses:
+        if email.endswith(".com"):
+            filtered_email.append(email)
     # Return the email addresses as a list
-    return email_addresses
+    return filtered_email
 
 def get_similarity_post_processing(data):
-    data["contacts"], data["email"] = "N/A"
-    
+    data["email"] = "N/A"
+    data["contacts"] = "N/A"
     try:
         text=read_docx_file(data["Name"])
         emails =extract_email_addresses(text)
