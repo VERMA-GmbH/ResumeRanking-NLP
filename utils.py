@@ -138,21 +138,24 @@ def extract_email_addresses(text):
     # Select the email address with the shorter length in case of overlapping matches
     email_addresses = []
     for i, match in enumerate(matches):
-        current_address = match.group()
-        if not current_address.endswith(".com"):
-            continue 
-        if i == 0:
-            if current_address not in email_addresses:
-                email_addresses.append(current_address)
-        else:
-            previous_match = matches[i-1]
-            previous_address = previous_match.group()
-            if match.start() < previous_match.end():
-                if len(current_address) < len(previous_address):
-                    email_addresses[-1] = current_address
-            else:
+        try:
+            current_address = match.group()
+            if not current_address.endswith(".com"):
+                continue 
+            if i == 0:
                 if current_address not in email_addresses:
                     email_addresses.append(current_address)
+            else:
+                previous_match = matches[i-1]
+                previous_address = previous_match.group()
+                if match.start() < previous_match.end():
+                    if len(current_address) < len(previous_address):
+                        email_addresses[-1] = current_address
+                else:
+                    if current_address not in email_addresses:
+                        email_addresses.append(current_address)
+        except Exception as e:
+            print(e)
     # Return the email addresses as a list
     return email_addresses
 
@@ -167,7 +170,7 @@ def get_similarity_post_processing(data):
 
         mobile_numbers = extract_mobile_numbers(text)
         if len(mobile_numbers) > 0 :
-            data["contacts"] =  extend(mobile_numbers)
+            data["contacts"] =  mobile_numbers[0]
     except Exception as e:
         print(e, "\nError processing Email/Mobile Number")
     data["Name"] = os.path.basename(data["Name"])
