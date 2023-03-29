@@ -195,7 +195,7 @@ def get_similarity(client_id : str, index:int):
     return_data = json.loads(resp)
     for data in return_data:
         try:
-            get_similarity_post_processing() 
+            get_similarity_post_processing(data) 
         except:
             pass
     return_data.append({
