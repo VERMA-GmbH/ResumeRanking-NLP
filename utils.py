@@ -8,6 +8,9 @@ import docx
 from docx import Document
 from PyPDF2 import PdfReader
 
+email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+
+
 
 def convert_pdf_to_docx(pdf_path, docx_path):
     with open(pdf_path, "rb") as pdf_file:
@@ -89,4 +92,53 @@ def del_old_data(path="/root/ResumeRanking-NLP/Data", delete_before = 24*60*60):
     for folder in ["JobDesc", "Resumes"]:
         delete_dir(os.path.join(path, folder), delete_before)
 
+
+def read_docx_file(filename):
+    """
+    Reads the contents of a docx file and returns a string containing all the text in the file.
+    """
+    # Load the docx file
+    doc = docx.Document(filename)
+
+    # Get all the text from the file
+    all_text = []
+    for para in doc.paragraphs:
+        all_text.append(para.text)
+
+    # Return the text as a single string
+    return '\n'.join(all_text)
+
+def extract_mobile_numbers(text):
+    """
+    Extracts mobile numbers from a string and returns them as a list.
+    """
+    # Define the regular expression for a mobile number
+    pattern = r'\b\d{10}\b'
+
+    # Search for the pattern in the text
+    match_iter = re.finditer(pattern, text)
+
+    # Extract the mobile numbers from the matches
+    mobile_numbers = []
+    for match in match_iter:
+        mobile_numbers.append(match.group())
+
+    # Return the mobile numbers as a list
+    return mobile_numbers
+
+def get_similarity_post_processing(data):
+    data["email"] = []
+    data["contacts"] = []
+    
+    try:
+        text=read_docx_file(data["Name"])
+        emails = re.findall(email_pattern, string)
+        data["email"].extend(emails)
+
+        mobile_numbers = extract_mobile_numbers(text)
+
+        data["contacts"].extend(mobile_numbers)
+    except Exception as e:
+        print(e, "\nError processing Email/Mobile Number")
+    data["Name"] = os.path.basename(data["Name"])
 
