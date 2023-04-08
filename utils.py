@@ -12,7 +12,7 @@ import json
 
 
 
-open_ai_key = "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"
+open_ai_key = os.environ['opeanai_key']
 openai.api_key = open_ai_key
 
 def convert_pdf_to_docx(pdf_path, docx_path):
