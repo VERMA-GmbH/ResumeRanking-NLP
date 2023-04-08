@@ -3,10 +3,12 @@ import re
 import sys
 from io import StringIO
 import time
-
+import openai
 import docx
 from docx import Document
 from PyPDF2 import PdfReader
+import json
+
 
 
 
@@ -164,6 +166,17 @@ def extract_email_addresses(text):
 def get_similarity_post_processing(data):
     data["email"] = "N/A"
     data["contacts"] = "N/A"
+    data["work experience"] = 0 
+
+    try:
+        data["work experience"] = openai_extract_experience(\
+        getText_docx(data["Name"])
+        )
+    except Exception as e:
+        print(f"Error in work experience {data.Name}", e)
+
+
+
     try:
         text=read_docx_file(data["Name"])
         emails =extract_email_addresses(text)
@@ -176,4 +189,37 @@ def get_similarity_post_processing(data):
     except Exception as e:
         print(e, "\nError processing Email/Mobile Number")
     data["Name"] = os.path.basename(data["Name"])
+
+def getText_docx(filename):
+    doc = docx.Document(filename)
+    fullText = []
+    for para in doc.paragraphs:
+        fullText.append(para.text)
+    return '\n'.join(fullText)
+
+
+
+def openai_extract_experience(text):
+    openai.api_key = open_ai_key
+    prompt = "given resume data bellow\n" + text +\
+    "\nnwhat is the total number of work experience in years, generate json response, if no work experiance work experiance value should be 0, json format \n{\n\twork experience : < float years>\n}. Output only json data"""
+    
+    
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+                {"role": "system", "content": "You are a chatbot"},
+                {"role": "user", "content": prompt},
+            ]
+    )
+
+    result = ''
+    for choice in response.choices:
+        result += choice.message.content
+
+    response = json.loads(result)
+    
+    return float(response["work experience"])
+
+
 
