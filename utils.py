@@ -217,10 +217,10 @@ def openai_extract_experience(text):
     result = ''
     for choice in response.choices:
         result += choice.message.content
-
+    print(result)
     response = json.loads(result)
     
-    return float(response["work experience"])
+    return response["work experience"]
 
 
 
