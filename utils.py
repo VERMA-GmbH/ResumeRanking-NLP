@@ -173,7 +173,7 @@ def get_similarity_post_processing(data):
         getText_docx(data["Name"])
         )
     except Exception as e:
-        print(f"Error in work experience {data.Name}", e)
+        print("Error in work experience ", data["Name"],  e)
 
 
 
