@@ -217,6 +217,8 @@ def openai_extract_experience(text):
     result = ''
     for choice in response.choices:
         result += choice.message.content
+    start, end = result.index("{"), result.index("}")
+    result = result[start:end+1]
     print(result)
     response = json.loads(result)
     
