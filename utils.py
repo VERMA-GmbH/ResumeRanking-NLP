@@ -200,6 +200,7 @@ def getText_docx(filename):
 
 
 def openai_extract_experience(text):
+    open_ai_key = "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"
     openai.api_key = open_ai_key
     prompt = "given resume data bellow\n" + text +\
     "\nnwhat is the total number of work experience in years, generate json response, if no work experiance work experiance value should be 0, json format \n{\n\twork experience : < float years>\n}. Output only json data"""
